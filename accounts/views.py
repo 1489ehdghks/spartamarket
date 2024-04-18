@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import (
     AuthenticationForm
 )
@@ -37,3 +37,10 @@ def login(request):
         form = AuthenticationForm()
     context = {"form": form}
     return render(request, "accounts/login.html", context)
+
+
+@require_POST
+def logout(request):
+    if request.user.is_authenticated:
+        auth_logout(request)
+    return redirect('index')

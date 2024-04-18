@@ -5,6 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 
+def products(request):
+    products = Products.objects.all()
+    context = {
+        "product": products
+    }
+    return render(request, "products/products.html", context)
+
+
 @login_required
 def create(request):
     # if not request.user.is_authenticated:
@@ -12,12 +20,12 @@ def create(request):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             article = form.save()
-            return redirect("articles:detail", article.id)
+            return redirect("products:detail", article.id)
     else:
         form = ProductForm()
 
     context = {"form": form}
-    return render(request, "articles/create.html", context)
+    return render(request, "products/create.html", context)
 
 
 def detail(request, pk):
@@ -25,7 +33,7 @@ def detail(request, pk):
     context = {
         "article": article,
     }
-    return render(request, 'articles/detail.html', context)
+    return render(request, 'products/detail.html', context)
 
     # comment_form = CommentForm
     # comments = article.comment_set.all()
@@ -42,14 +50,14 @@ def update(request, pk):
         form = ProductForm(request.POST, instance=article)
         if form.is_valid():
             article = form.save()
-            return redirect('articles:detail', article.pk)
+            return redirect('products:detail', article.pk)
     else:
         form = ProductForm(instance=article)
     context = {
         "form": form,
         "article": article,
     }
-    return render(request, "articles/update.html", context)
+    return render(request, "products/update.html", context)
 
 
 @require_POST
@@ -57,4 +65,4 @@ def delete(request, pk):
     if request.user.is_authenticated:
         article = get_object_or_404(Products, pk=pk)
         article.delete()
-    return redirect("articles:articles")
+    return redirect("products:products")
