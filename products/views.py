@@ -30,10 +30,11 @@ def create(request):
 
 def detail(request, pk):
     product = get_object_or_404(Products, pk=pk)
-    context = {
-        "products": product,
 
+    context = {
+        "product": product,
     }
+    print("Product PK:", product.pk)
     return render(request, 'products/detail.html', context)
 
 
@@ -61,3 +62,17 @@ def delete(request, pk):
         products = get_object_or_404(Products, pk=pk)
         products.delete()
     return redirect("products:products")
+
+
+@login_required
+def add_like(request, pk):
+    product = get_object_or_404(Products, pk=pk)
+    product.liked_by.add(request.user)
+    return redirect('products:detail', pk=product.pk)
+
+
+@login_required
+def remove_like(request, pk):
+    product = get_object_or_404(Products, pk=pk)
+    product.liked_by.remove(request.user)
+    return redirect('products:detail', pk=product.pk)

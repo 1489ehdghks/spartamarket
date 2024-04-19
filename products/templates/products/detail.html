@@ -6,18 +6,28 @@
         <div class="col-lg-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h1 class="card-title">{{ products.title }}</h1>
-                    {% if products.image  %}
-                    <img src="{{ products.image }}">
+                    {% if product.pk %}
+                        {% if request.user in product.liked_by.all %}
+                            <a href="{% url 'products:remove_like' pk=product.pk %}" class="btn btn-warning">Unlike</a>
+                        {% else %}
+                            <a href="{% url 'products:add_like' pk=product.pk %}" class="btn btn-success">Like</a>
+                        {% endif %}
                     {% else %}
-                    {{''}}
+                        <p>Error: Product ID is not available.</p>
                     {% endif %}
-                    <h2 class="h5 text-muted">${{ products.product_price }}</h2>
-                    <p class="card-text">{{ products.content }}</p>
+                    
+                    <h1 class="card-title">{{ product.title }}</h1>
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-fluid">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                    <h2 class="h5 text-muted">${{ product.product_price }}</h2>
+                    <p class="card-text">{{ product.content }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <a href="{% url 'products:edit' products.id %}" class="btn btn-outline-primary">Edit</a>
-                            <form action="{% url 'products:delete' products.id %}" method="post" style="display: inline;">
+                            <a href="{% url 'products:edit' pk=product.pk %}" class="btn btn-outline-primary">Edit</a>
+                            <form action="{% url 'products:delete' pk=product.pk %}" method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure?');">
                             </form>
@@ -30,4 +40,3 @@
     </div>
 </div>
 {% endblock %}
-

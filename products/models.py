@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 class Products(models.Model):
@@ -14,6 +15,8 @@ class Products(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  # 수정될 때 업데이트
     # blank가 없으면 반드시 사진이 있어야함으로 됨
     image = models.ImageField(upload_to="images/", blank=True)
+    liked_by = models.ManyToManyField(
+        User, related_name="liked_products", blank=True)
 
     def __str__(self):
         return self.title
