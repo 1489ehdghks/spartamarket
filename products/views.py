@@ -6,33 +6,36 @@ from django.views.decorators.http import require_POST
 
 
 def products(request):
-    products = Products.objects.all()
+    product = Products.objects.all()
     context = {
-        "product": products
+        "product": product
     }
+
     return render(request, "products/products.html", context)
 
 
 @login_required
 def create(request):
-    # if not request.user.is_authenticated:
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            article = form.save()
-            return redirect("products:detail", article.id)
+            product = form.save()
+            print(product.pk)
+            return redirect("products:products", product.pk)
     else:
         form = ProductForm()
-
-    context = {"form": form}
+    context = {'form': form}
+    print(context)
     return render(request, "products/create.html", context)
 
 
 def detail(request, pk):
-    article = get_object_or_404(Products, pk=pk)
+    product = get_object_or_404(Products, pk=pk)
     context = {
-        "article": article,
+        "products": product,
+
     }
+    print(context)
     return render(request, 'products/detail.html', context)
 
     # comment_form = CommentForm
@@ -44,25 +47,25 @@ def detail(request, pk):
     # }
 
 
-def update(request, pk):
-    article = get_object_or_404(Products, pk=pk)
+def edit(request, pk):
+    product = get_object_or_404(Products, pk=pk)
     if request.method == 'POST':
-        form = ProductForm(request.POST, instance=article)
+        form = ProductForm(request.POST, instance=product)
         if form.is_valid():
-            article = form.save()
-            return redirect('products:detail', article.pk)
+            product = form.save()
+            return redirect('products:detail', product.pk)
     else:
-        form = ProductForm(instance=article)
+        form = ProductForm(instance=product)
     context = {
         "form": form,
-        "article": article,
+        "article": product,
     }
-    return render(request, "products/update.html", context)
+    return render(request, "products/edit.html", context)
 
 
 @require_POST
 def delete(request, pk):
     if request.user.is_authenticated:
-        article = get_object_or_404(Products, pk=pk)
-        article.delete()
+        products = get_object_or_404(Products, pk=pk)
+        products.delete()
     return redirect("products:products")

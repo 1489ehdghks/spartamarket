@@ -4,10 +4,9 @@ from django.db import models
 class Products(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
-    product_name = models.CharField(max_length=50)
     product_price = models.IntegerField()
-    pinned_userid = models.TextField()
-    pinned_length = models.IntegerField()
+    pinned_userid = models.TextField(default="")
+    pinned_length = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)  # 추가될 때 업데이트
     updated_at = models.DateTimeField(auto_now=True)  # 수정될 때 업데이트
     # blank가 없으면 반드시 사진이 있어야함으로 됨

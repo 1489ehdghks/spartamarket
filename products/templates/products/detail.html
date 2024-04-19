@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                {% if products.image  %}
+                <img src="{{ products.image }}" 
+                     alt="{{ products.title }}" class="card-img-top img-fluid">
+                {% else %}
+                {{''}}
+                {% endif %}
+                <div class="card-body">
+                    <h1 class="card-title">{{ products.title }}</h1>
+                    <h2 class="h5 text-muted">${{ products.product_price }}</h2>
+                    <p class="card-text">{{ products.content }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <a href="{% url 'products:edit' products.id %}" class="btn btn-outline-primary">Edit</a>
+                            <form action="{% url 'products:delete' products.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                            </form>
+                        </div>
+                        <a href="{% url 'products:products' %}" class="btn btn-sm btn-secondary">Back to list</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

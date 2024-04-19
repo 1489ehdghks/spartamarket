@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero min-h-screen bg-base-200">
+    <div class="hero-content flex-col lg:flex-row-reverse">
+        <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <form class="card-body" action="{% url 'products:create' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Title</span>
+                    </label>
+                    <input type="text" name="title" value="{{ form.title.value|default_if_none:'' }}" class="input input-bordered" required>
+                    {% for error in form.title.errors %}
+                    <p class="text-red-500 text-xs">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Content</span>
+                    </label>
+                    <textarea name="content" class="input input-bordered" required>{{ form.content.value|default_if_none:'' }}</textarea>
+                    {% for error in form.content.errors %}
+                    <p class="text-red-500 text-xs">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Product Price</span>
+                    </label>
+                    <input type="number" name="product_price" value="{{ form.product_price.value|default_if_none:'' }}" class="input input-bordered" required>
+                    {% for error in form.product_price.errors %}
+                    <p class="text-red-500 text-xs">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Image</span>
+                    </label>
+                    <input type="file" name="image" class="input input-bordered">
+                    {% for error in form.image.errors %}
+                    <p class="text-red-500 text-xs">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-control mt-6">
+                    <button type="submit" class="btn btn-primary">저장</button>
+                    <a href="{% url 'products:products' %}" class="btn btn-primary">목록가기</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
