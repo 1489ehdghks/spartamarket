@@ -31,7 +31,7 @@ def login(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            next_url = request.GET.get('next') or 'index'
+            next_url = request.GET.get('next') or 'products:products'
             return redirect(next_url)
     else:
         form = AuthenticationForm()

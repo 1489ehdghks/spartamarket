@@ -19,14 +19,13 @@ def create(request):
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            product = form.save()
-            print(product.pk)
-            return redirect("products:products", product.pk)
+            product = form.save(commit=False)
+            product.user = request.user
+            product.save()
+            return redirect("products:detail", pk=product.pk)
     else:
         form = ProductForm()
-    context = {'form': form}
-    print(context)
-    return render(request, "products/create.html", context)
+        return render(request, "products/create.html", {'form': form})
 
 
 def detail(request, pk):
@@ -35,30 +34,23 @@ def detail(request, pk):
         "products": product,
 
     }
-    print(context)
     return render(request, 'products/detail.html', context)
 
-    # comment_form = CommentForm
-    # comments = article.comment_set.all()
-    # context = {
-    #     "article": article,
-    #     "comment_Form": comment_form,
-    #     "comments": comments,
-    # }
 
-
+@login_required
 def edit(request, pk):
     product = get_object_or_404(Products, pk=pk)
     if request.method == 'POST':
-        form = ProductForm(request.POST, instance=product)
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
-            product = form.save()
-            return redirect('products:detail', product.pk)
+            form.save()
+            return redirect('products:detail', pk=product.pk)
     else:
         form = ProductForm(instance=product)
+
     context = {
         "form": form,
-        "article": product,
+        "product": product,
     }
     return render(request, "products/edit.html", context)
 

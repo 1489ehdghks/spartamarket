@@ -5,14 +5,13 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm">
-                {% if products.image  %}
-                <img src="{{ products.image }}" 
-                     alt="{{ products.title }}" class="card-img-top img-fluid">
-                {% else %}
-                {{''}}
-                {% endif %}
                 <div class="card-body">
                     <h1 class="card-title">{{ products.title }}</h1>
+                    {% if products.image  %}
+                    <img src="{{ products.image }}">
+                    {% else %}
+                    {{''}}
+                    {% endif %}
                     <h2 class="h5 text-muted">${{ products.product_price }}</h2>
                     <p class="card-text">{{ products.content }}</p>
                     <div class="d-flex justify-content-between align-items-center">
